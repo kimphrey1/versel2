@@ -1,0 +1,226 @@
+{% extends 'admin/admin_navbar.html' %}
+
+{% block title %} Applicant Emails {% endblock %}
+{% block applicant_emails %} active {% endblock %}
+{% block css %}
+<!-- Include any additional CSS styles if needed -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<style>
+    .dark-heading th {
+        background-color: #343a40; /* Dark gray background */
+        color: #ffffff; /* White text */
+    }
+
+    .dt-buttons {
+        margin-bottom: 10px;
+    }
+
+    .custom-table-container {
+        border: 2px solid red; /* Red border */
+        padding: 10px; /* Optional padding */
+        border-radius: 5px; /* Optional border radius */
+        box-shadow: 0 0 0 2px #343a40; /* Dark line surrounding the table */
+        overflow-x: auto; /* Enable horizontal scrolling */
+    }
+
+    .custom-table-container table {
+        border: 2px solid black; /* Black outside border for the table */
+        border-collapse: collapse;
+        width: 100%; /* Make the table fill the available width */
+        max-width: none; /* Disable maximum width */
+    }
+
+    .custom-table-container table th,
+    .custom-table-container table td {
+        word-wrap: break-word; /* Allow long words to break into multiple lines */
+    }
+
+    .custom-table-container table tbody tr:hover {
+        background-color: #ffff99; /* Yellow hover background color */
+    }
+
+    /* Striped rows */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05); /* Light gray background */
+    }
+
+    /* Thin black line through the columns */
+    .table-bordered td,
+    .table-bordered th {
+        border: 1px solid black;
+    }
+
+    /* Add button styling */
+    .add-button-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        background-color: #ff0000; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .add-button:hover {
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }
+
+    /* Style for the "Action" column */
+    .custom-table-container table td.action-column {
+        white-space: nowrap; /* Prevent wrapping for the "Action" column */
+    }
+
+
+    .text-center-uppercase {
+        text-transform: uppercase;
+    }
+
+
+
+    .custom-container {
+        border: 2px solid black; /* Black border */
+        border-radius: 5px; /* Optional border radius */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+        padding: 20px; /* Add padding to create space between content and border */
+        position: relative; /* Ensure relative positioning for z-index */
+    }
+
+    .custom-container::before,
+    .custom-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        z-index: -1; /* Ensure red border is behind black border */
+    }
+
+    .custom-container::before {
+        border-bottom: none; /* Remove bottom border for top pseudo-element */
+    }
+
+    .custom-container::after {
+        border-top: none; /* Remove top border for bottom pseudo-element */
+    }
+
+
+
+
+    /* Add button styling */
+    .add-button-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        background-color: #ff0000; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .add-button:hover {
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    } 
+</style>
+{% endblock %}
+{% block body %}
+<div class="container mt-4 custom-container">
+    <h2 class="text-center">SELECT A NOTICE AND A CATEGORY</h2>
+    <form method="get" action="">
+        <div class="form-group">
+            <select name="notice_id" class="form-control" onchange="this.form.submit()">
+                <option value="">CLICK TO SELECT NOTICE</option>
+                {% for notice in notices %}
+                <option value="{{ notice.id }}" {% if notice.id == selected_notice_id %}selected{% endif %}>
+                    {{ notice.title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="type" class="form-control" onchange="this.form.submit()">
+                <option value="">CLICK TO SELECT CATEGORY</option>
+                <option value="application" {% if selected_type == 'application' %}selected{% endif %}>Application</option>
+                <option value="submission" {% if selected_type == 'submission' %}selected{% endif %}>Submission</option>
+            </select>
+        </div>
+    </form>
+
+    {% if items %}
+    <h3 class="text-center text-uppercase">{{ selected_type|title }}s</h3>
+    <div class="table-responsive custom-table-container">
+        <table class="table table-striped table-bordered" id="example">
+            <thead class="dark-heading">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for name, email in items %}
+                <tr>
+                    <td>{{ name }}</td>
+                    <td><a href="#" class="email-link" data-name="{{ name }}" data-email="{{ email }}">{{ email }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-3 text-center"> <!-- Added text-center class for center alignment -->
+            <button id="sendAllEmails" class="btn btn-warning add-button">Email All</button>
+        </div>
+     <!-- Email All button -->
+    {% endif %}
+</div>
+{% endblock %}
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#example').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+                'excel', 'pdf'
+            ],
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+
+        $('.email-link').click(function(e) {
+            e.preventDefault();
+            var email = $(this).data('email');
+            var name = $(this).data('name');
+            name = name.toLowerCase().replace(/(^|\s)\S/g, function(char) { return char.toUpperCase(); });
+            var mailtoLink = 'mailto:' + email + '?subject=Application&body=Dear ' + name + ',%0D%0A%0D%0A';
+            window.open(mailtoLink, '_blank');
+        });
+
+        $('#sendAllEmails').click(function() {
+            var emails = [];
+            $('.email-link').each(function() {
+                var email = $(this).data('email');
+                emails.push(email);
+            });
+            var allEmails = emails.join(',');
+            var mailtoLink = 'mailto:' + allEmails + '?subject=&body=Dear All,%0D%0A%0D%0A';
+            window.open(mailtoLink, '_blank');
+        });
+    });
+</script>
+{% endblock %}

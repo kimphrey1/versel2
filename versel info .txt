@@ -1,0 +1,44 @@
+PLEASE READ EVERYTHING INCLUDED IN THIS MESSAGE:
+
+vercel.json code:
+
+{
+    "builds": [{
+        "src": "djangoprojectname/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "djangoprojectname/wsgi.py"
+        }
+    ]
+}
+
+IMPORTANT NOTE:
+
+Hi all, 
+
+Please note that you will have to setup your static and media files as well - I'd suggest using Amazon S3.
+
+Here is a tutorial on how to setup Amazon S3:
+
+https://www.youtube.com/watch?v=JQVQcNN0cXE
+
+
+You will also have to setup your database as well - I'd recommend using a PostgreSQL database.
+
+Here is a tutorial on how to setup a PostgreSQL database with Render for FREE:
+
+https://www.youtube.com/watch?v=AgTr5mw4zdI
+
+----- PLEASE READ --------------
+
+ALTERNATE DEPLOYMENT METHODS:
+
+Deployment with PythonAnywhere:
+https://www.youtube.com/watch?v=xtnUwvjOThg
+
+Deployment with Render:
+https://www.youtube.com/watch?v=AgTr5mw4zdI

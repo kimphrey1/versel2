@@ -1,0 +1,114 @@
+{% extends 'user/user_navbar.html' %}
+
+{% block title %} Chat {% endblock %}
+{% block chat %} active {% endblock %}
+{% block css %}
+    <!-- Include any additional CSS styles if needed -->
+    <style>
+        .dark-heading th {
+            background-color: #343a40; /* Dark gray background */
+            color: #ffffff; /* White text */
+        }
+
+        .custom-table-container {
+            border: 2px solid red; /* Red border */
+            padding: 10px; /* Optional padding */
+            border-radius: 5px; /* Optional border radius */
+            box-shadow: 0 0 0 2px #343a40; /* Dark line surrounding the table */
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
+
+        .custom-table-container table {
+            border: 2px solid black; /* Black outside border for the table */
+            border-collapse: collapse;
+            width: 100%; /* Make the table fill the available width */
+            max-width: none; /* Disable maximum width */
+        }
+
+        .dark-heading th,
+        .custom-table-container table th,
+        .custom-table-container table td {
+            word-wrap: break-word; /* Allow long words to break into multiple lines */
+            border-right: 1px solid black; /* Thin black line through the columns */
+            border-bottom: 1px solid black; /* Thin black line for horizontal lines */
+        }
+
+        .dark-heading th {
+            border-top: 1px solid black; /* Thin black line for the top header */
+        }
+
+        .custom-table-container table tbody tr:hover {
+            background-color: #ffff99; /* Yellow hover background color */
+        }
+
+
+{% comment %} BUTTON {% endcomment %}
+{% comment %}     btn btn-warning add-button      {% endcomment %}
+
+/* Add button styling */
+.add-button-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.add-button {
+    background-color: #ff0000; /* Red background */
+    color: #ffffff; /* White text */
+    border: none; /* No border */
+    border-radius: 20px; /* Rounded corners */
+    padding: 10px 20px; /* Padding */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Cursor style */
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+    transition: all 0.3s ease; /* Transition effect */
+}
+.add-button:hover {
+    transform: translateY(-3px); /* Move button up */
+    box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+} 
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4 custom-table-container">
+    <h1>Chat</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-warning add-button">Send</button>
+    </form>
+    <hr>
+    <h2>Messages</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="dark-heading">
+            <tr>
+                <th scope="col">No</th>
+                
+                <th>Time</th>
+                <th>Message</th>
+                <th>File</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in request.user.sent_messages.all %}
+                <tr>
+                    <td style="text-align: left; vertical-align: middle;">{{ forloop.counter }}</td>
+                    <td style="text-align: left; vertical-align: middle;">{{ message.timestamp }}</td>
+                    
+                    <td style="text-align: left; vertical-align: middle;">{{ message.content }}</td>
+                    
+                    <td style="text-align: left; vertical-align: middle;">
+                        {% if message.file %}
+                            <a href="{{ message.file.url }}" class="btn" style="font-size: 24px;"><i class="fa fa-file"></i></a>
+                        {% else %}
+                            &nbsp; <!-- Renders an empty space if no file is present -->
+                        {% endif %}
+                    </td>
+                    
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

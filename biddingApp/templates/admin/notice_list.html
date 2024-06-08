@@ -1,0 +1,179 @@
+{% extends 'admin/admin_navbar.html' %}
+
+{% block title %} Notice Lists {% endblock %}
+{% block notice_list %} active {% endblock %}
+{% block css %}
+<!-- Include DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<!-- Include DataTables Buttons CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+
+
+<style>
+    /* Your custom CSS styles go here */
+    /* Dark gray table head */
+    .dark-heading th {
+        background-color: #343a40;
+        color: #ffffff;
+        border: 1px solid black; /* Thin black border */
+    }
+
+    /* Red border and dark line surrounding the table */
+    .custom-table-container {
+        border: 2px solid red;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 0 2px #343a40;
+        overflow-x: auto;
+    }
+
+    .custom-table-container table {
+        border: 2px solid black; /* Black outside border for the table */
+        border-collapse: collapse;
+        width: 100%; /* Make the table fill the available width */
+        max-width: none; /* Disable maximum width */
+    }
+
+    /* Hover effect for rows */
+    .custom-table-container table tbody tr:hover {
+        background-color: #ffff99;
+    }
+
+    /* Thin black line through the columns */
+    .custom-table-container table th,
+    .custom-table-container table td {
+        border-right: 1px solid black;
+    }
+
+    /* DataTables buttons styling */
+    .dt-buttons {
+        margin-bottom: 10px;
+    }
+
+    /* Add button styling */
+    .add-button-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        margin: 0 auto;
+        background-color: #ff0000; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .add-button:hover {
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container mt-4 custom-table-container">
+    <div class="add-button-container">
+        <!-- Add button -->
+        <a href="{% url 'add_notice' %}" class="btn btn-warning add-button">Add Notice</a>
+    </div>
+    <table class="table table-striped table-hover" id="example">
+        <thead class="dark-heading">
+            <tr>
+                <th>No</th>
+                <th>Title</th>
+                <th>Biddoc</th>
+                <th>Advert</th>
+                <th>Form11</th>
+                <th>Created</th>
+                <th>Starts</th>
+                <th>Ends</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notice in notices %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{notice.title}}</td>
+                <td style="text-align: center; vertical-align: middle;">
+
+
+                    <a href="{% url 'admin_view_biddoc_images' notice.id %}" class="fas fa-image" style="font-size: 28px; color: #343a40;"></a>
+
+                    {% comment %} {% if notice.bidding_doc %}
+                        <a href="{{ notice.bidding_doc.url }}" target="_blank" class='fas' style="font-size: 24px;">&#xf1c6;</a>
+                    {% endif %} {% endcomment %}
+
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    {% comment %} {% if notice.preview_biddoc %}
+                    <a href="{{ notice.preview_biddoc.url }}" target="_blank" class="fas fa-image" style="font-size: 28px;"></a> {% endcomment %}
+
+
+                    <a href="{% url 'admin_view_full_notice_images' notice.id %}" class="fas fa-image" style="font-size: 28px; color: #343a40;"></a>
+
+                
+
+
+                    {% comment %} {% endif %} {% endcomment %}
+                </td>
+                
+                <td style="text-align: center; vertical-align: middle;">  <a href="/form11/{{notice.id}}/" class="btn"><i class="fa fa-file-alt"style="font-size: 24px;color: #343a40;"</a></td>
+
+
+
+
+                <td>{{notice.creation_date}}</td>
+                <td>{{notice.start_date}}</td>
+                <td>{{notice.end_date}}</td>
+                <td style="text-align: center; vertical-align: middle;">  <a href="/edit_notice/{{notice.id}}/" class="btn"><i class="fa fa-edit"></i></a></td>
+                <td style="text-align: center; vertical-align: middle;"> 
+                    <button type="button" class="btn" onclick="confirmDelete('{{ notice.id }}')"><i class="fa fa-trash"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block js %}
+<!-- Include DataTables JavaScript -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- Include DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], // Show entries dropdown
+            "pageLength": 10, // Default page length
+            "dom": 'Blfrtip', // Button layout
+            "buttons": ['excel', 'pdf'] // Excel, PDF
+        });
+    });
+
+    // Function to confirm deletion
+    function confirmDelete(noticeId) {
+        if (confirm('Are you sure you want to delete this notice?')) {
+            // If confirmed, submit the form
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "notice_delete" 0 %}'.replace('0', noticeId);
+            var csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+{% endblock %}

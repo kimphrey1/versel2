@@ -1,0 +1,28 @@
+{% extends 'basic.html' %}
+
+{% block title %} UNOC Procurement Portal {% endblock %}
+
+{% block home %} active {% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+
+{% load static %}   
+{% comment %} request.path == ""  {% endcomment %}
+                                <!--BANNER SECTION-->
+                            {%include "banner.html"%}    
+
+                                <!--ADVERTS SECTION-->
+                            {% if request.user.is_superuser %}
+                                {% include "admin_home.html" %}
+                            {% else%}
+                                {% include "adverts.html" %}
+                            {% endif %}
+
+                                <!-- FOOTER SECTION-->
+                                
+                             {%include "footer.html"%}
+{% endblock %}

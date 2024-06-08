@@ -1,0 +1,144 @@
+
+{% extends 'admin/admin_navbar.html' %}
+
+{% block title %} Payments {% endblock %}
+{% block payment_list %} active {% endblock %}
+{% block css %}
+<!-- Include any additional CSS styles if needed -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<style>
+    .dark-heading th {
+        background-color: #343a40; /* Dark gray background */
+        color: #ffffff; /* White text */
+    }
+
+    .dt-buttons {
+        margin-bottom: 10px;
+    }
+
+    .custom-table-container {
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        box-shadow: 0 0 0 2px #343a40; /* Dark line surrounding the table */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+        
+    }
+
+    .custom-table-container table {
+        border: 2px solid black; /* Black outside border for the table */
+        border-collapse: collapse;
+        width: 100%; /* Make the table fill the available width */
+        max-width: none; /* Disable maximum width */
+    }
+
+    .custom-trash-icon {
+        color: black; /* Change the color to black */
+    }
+
+    .custom-table-container table th,
+    .custom-table-container table td {
+        word-wrap: break-word; /* Allow long words to break into multiple lines */
+        border-right: 1px solid black; /* Thin black line through the columns */
+        border-bottom: 1px solid black; /* Thin black line for horizontal lines */
+    }
+
+    .custom-table-container table thead th {
+        border-top: 1px solid black; /* Thin black line for the top header */
+    }
+
+    .custom-table-container table tbody tr:hover {
+        background-color: #ffff99; /* Yellow hover background color */
+    }
+
+    .align-right {
+        text-align: right;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container mt-4 custom-table-container">
+    <div>
+        &nbsp;
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered" id="example">
+            <thead class="dark-heading">
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Time</th>
+                    
+                    <th scope="col">User</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">TxnID</th>
+                    <th scope="col">Fee(UGX)</th>
+                    {% comment %} <th scope="col">Delete</th>   {% endcomment %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ payment.created_at }}</td>
+                    
+                    <td>{{ payment.user.username }}</td>
+                    <td>{{ payment.notice }}</td>
+                    <td>{{ payment.tx_ref }}</td>
+                    {% comment %} <td>{{ payment.notice.fee|floatformat:"0" }}</td> {% endcomment %}
+                    <td class="Comma align-right">{{ payment.notice.fee }}</td>
+
+
+                    {% comment %} delete code {% endcomment %}
+                    {% comment %} <td style="text-align: center; vertical-align: middle;"> 
+                        <form action="{% url 'delete_payment' payment.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn" onclick="return confirm('Are you sure you want to delete this payment?')">
+                                <i class="fa fa-trash custom-trash-icon"></i> <!-- Font Awesome trash icon -->
+                            </button>
+                        </form>
+                    </td> {% endcomment %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- Include any additional JavaScript if needed -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $(".Comma").each(function() {
+            var amount = parseFloat($(this).text());
+            var newAmount = amount.toLocaleString('en-US');
+            $(this).text(newAmount);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+                'excel', 'pdf'
+            ],
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+    });
+</script>
+
+
+
+
+
+
+{% endblock %}

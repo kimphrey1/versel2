@@ -1,0 +1,41 @@
+Table Head Design:
+
+The table head (<thead>) has a dark gray background with white text color.
+Achieved using the .dark-heading CSS class.
+Table Border Design:
+
+The table has a red border surrounding it.
+The border width is 2 pixels.
+Achieved using the .custom-table-container CSS class.
+Dark Line Surrounding the Table:
+
+The table has a dark line surrounding its outside margins.
+The line is created using the box-shadow CSS property.
+The line has a width of 2 pixels and a color of dark gray (#343a40).
+Achieved using the .custom-table-container CSS class.
+Outside Border for the Table:
+
+The table has a black outside border.
+The border is applied to the <table> element.
+The border width is 2 pixels.
+Achieved using the .custom-table-container table CSS selector.
+Hoverable Rows:
+
+Rows in the table change background color to yellow when hovered over.
+Achieved using the .custom-table-container table tbody tr:hover CSS selector.
+Responsive Table:
+
+The table is responsive, allowing horizontal scrolling on smaller viewports.
+Achieved by wrapping the table with a <div> having the .table-responsive class.
+Button Placement:
+
+Buttons for Excel, PDF, and Copy functionalities are placed above the table.
+Achieved by including the DataTables Buttons extension and initializing the buttons in the JavaScript code.
+Select Entries per Page:
+
+Dropdown menu to select the number of entries displayed per page.
+Achieved using DataTables' lengthMenu option.
+Column Sizing:
+
+Column width is determined by the length of the longest entry in each column.
+Achieved by setting the word-wrap CSS property to break-word for table headers and cells.

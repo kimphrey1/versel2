@@ -1,0 +1,173 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+  rel="icon"
+  href="https://www.unoc.co.ug/wp-content/uploads/2020/12/fevicon.png"
+/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+
+   <!-- Bootstrap Link-->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <!-- Google Fonts -->
+   <link
+       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+       rel="stylesheet">
+
+
+  <title>{% block title %}{% endblock %}</title>
+  <style>
+    .navbar {
+      background-color: #FFFFFF;
+      border-bottom: 2px solid #F3102E;
+    }
+    .head1 {
+      color: #FBAD30;
+      font-size: 25px;
+      font-weight: bold;
+      height: 50px;
+    }
+
+    .head2 {
+      color: #EF4926;
+      font-size: 25px;
+      font-weight: bold;
+    }
+    #navbar a,
+    #navbar a:focus {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 10px 30px;
+      font-family: "Poppins", sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: #556270;
+      white-space: nowrap;
+      transition: 0.3s;
+    }
+
+    #navbar a i,
+    #navbar a:focus i {
+      font-size: 12px;
+      line-height: 0;
+      margin-left: 5px;
+    }
+
+    #navbar a:hover,
+    #navbar .active,
+    #navbar .active:focus,
+    #navbar li:hover>a {
+      color: #d9232d;
+    }
+  </style>
+  {% block css %}
+  {% endblock %}
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top no-print">
+    <div class="container">
+    <a class="navbar-brand me-auto" href="/admin_home/">
+      <img
+        src="{% static 'img/trans_full_logo.png' %}"
+        alt="logo"
+        width="154px"
+        height="50px"
+      />
+    </a>
+      <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul id="navbar" class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+            <ul class="navbar-nav">
+
+            </ul>
+          </div>
+
+          <li class="nav-item">
+            <a class="nav-link {% block view_applicants %} {% endblock %}" href="/view_applicants/">Users</a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link {% block notice_list %} {% endblock %}" href="/notice_list/">Notices</a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link {% block all_applicants %} {% endblock %}" href="/all_applicants/">Applications</a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link {% block payment_list %} {% endblock %}" href="/payment_list/">Payments</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link {% block all_submissions %} {% endblock %}" href="/all_submissions/">Submissions</a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link {% block admin_messages %} {% endblock %}" href="/messages/">Chat</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link {% block applicant_emails %} {% endblock %}" href="/notice/emails/">Emails</a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/">Logout</a>
+          </li>
+        </ul>
+        {% comment %} <a class="navbar-brand" style="font-weight: bold; font-family: 'Times New Roman', Times, serif;" href="#">Welcome {{request.user.get_full_name}}</a> {% endcomment %}
+      </div>
+    </div>
+  </nav>
+<br><br><br>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+
+  {% block body %}
+  {% endblock %}
+</body>
+{% block js %}
+<script>
+  $(document).ready(function () {
+    $('#example').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copyHtml5',
+        'excelHtml5',
+        'csvHtml5',
+        'pdfHtml5'
+      ]
+    });
+  });
+</script>
+{% endblock %}
+
+</html>

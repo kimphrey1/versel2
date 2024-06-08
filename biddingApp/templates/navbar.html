@@ -1,0 +1,51 @@
+{%load static%}
+    <!-- ======= Navbar Section ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex align-items-center">
+
+            <!-- <h1 class="logo me-auto"><a href="index.html">UNOC</a></h1> -->
+            <!-- Uncomment below if you prefer to use an image logo -->
+            {% if request.user.is_superuser %}
+            <a href="/admin_home/" class="logo me-auto">
+                <img src="{% static 'img/trans_full_logo.png' %}" alt="UNOC Logo" class="img-fluid" width="154px" height="50px">
+            </a>
+            {% else %}
+            <a href="/" class="logo me-auto">
+                <img src="{% static 'img/trans_full_logo.png' %}" alt="UNOC Logo" class="img-fluid" width="154px" height="50px">
+            </a>
+            {%endif%}
+            
+            <nav id="navbar" class="navbar">
+                <ul>
+                    {% if not request.user.is_authenticated %}
+                        <li><a class="nav-link {% block home %} {% endblock %}" href="/" class="active">Home</a></li>
+                        <li><a class="nav-link {% block user_login %} {% endblock %}" href="/user_login/">User Login</a></li>
+                        <li><a class="nav-link {% block admin_login %} {% endblock %}" href="/admin_login/">Admin Login</a></li>
+                    {% else %}
+                        {% if request.user.is_superuser %}
+                            <!-- Admin navigation -->
+                            <li><a class="nav-link {% block view_applicants %} {% endblock %}" href="/view_applicants/">Users</a></li>
+                            <li><a class="nav-link {% block manage_user_permissions %} {% endblock %}" href="/manage_user_permissions/">Permissions</a></li>
+                            <li><a class="nav-link {% block notice_list %} {% endblock %}" href="/notice_list/">Notices</a></li>
+                            <li><a class="nav-link {% block all_applicants %} {% endblock %}" href="/all_applicants/">Applications</a></li>
+                            <li><a class="nav-link {% block bidstore_list %} {% endblock %}" href="/bidstore_list/">Bidstores</a></li>
+                            <li><a class="nav-link {% block payment_list %} {% endblock %}" href="/payment_list/">Payments</a></li>
+                            <li><a class="nav-link {% block view_submits %} {% endblock %}" href="/view_submits/">Submits</a></li>
+                            <li><a href="/logout/">Logout</a></li>
+                        {% else %}
+                            <!-- Regular user navigation -->
+                            <li><a href="/all_notices/">Notice List</a></li>
+                            <li><a href="/user_applications/">My Applications</a></li>
+                            <li><a href="/user/payments/">Payments</a></li>
+                            <li><a href="/all_bidstores/">Bidstores</a></li>
+                            <li><a href="/logout/">Logout</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+            
+        </div>
+    </header>
+            <!-- End Navbar-->
+ 

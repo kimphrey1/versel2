@@ -1,0 +1,142 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap Link-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="icon"
+      href="https://www.unoc.co.ug/wp-content/uploads/2020/12/fevicon.png"
+    />
+    <title>UNOC Procurement Portal</title>
+   
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/footer/css/style.css' %}" rel="stylesheet">
+
+    <style>
+        header {
+            border-bottom: 2px solid #f3102e;
+            height: 80px;
+        }
+    </style>
+    {% block css %} {% endblock %}
+  </head>
+
+  <body>
+        
+    <!-- ======= Navbar Section ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex align-items-center">
+
+            <!-- <h1 class="logo me-auto"><a href="index.html">UNOC</a></h1> -->
+            <!-- Uncomment below if you prefer to use an image logo -->
+            {% if request.user.is_superuser %}
+            <a href="/admin_home/" class="logo me-auto">
+                <img src="{% static 'img/trans_full_logo.png' %}" alt="UNOC Logo" class="img-fluid" width="154px" height="50px">
+            </a>
+            {% else %}
+            <a href="/" class="logo me-auto">
+                <img src="{% static 'img/trans_full_logo.png' %}" alt="UNOC Logo" class="img-fluid" width="154px" height="50px">
+            </a>
+            {%endif%}
+            
+            <nav id="navbar" class="navbar">
+                <ul>
+                    {% if not request.user.is_authenticated %}
+                        <li><a class="nav-link {% block home %} {% endblock %}" href="/" class="active">Home</a></li>
+                        <li><a class="nav-link {% block user_login %} {% endblock %}" href="/user_login/">User Login</a></li>
+                        <li><a class="nav-link {% block admin_login %} {% endblock %}" href="/admin_login/">Admin Login</a></li>
+                    {% else %}
+                        {% if request.user.is_superuser %}
+                            <!-- Admin navigation -->
+                            <li><a class="nav-link {% block view_applicants %} {% endblock %}" href="/view_applicants/">Users</a></li>
+                            <li><a class="nav-link {% block notice_list %} {% endblock %}" href="/notice_list/">Adverts</a></li>
+                            <li><a class="nav-link {% block all_applicants %} {% endblock %}" href="/all_applicants/">Applications</a></li>
+                            <li><a class="nav-link {% block payment_list %} {% endblock %}" href="/payment_list/">Payments</a></li>
+                            <li><a class="nav-link {% block all_submissions %} {% endblock %}" href="/all_submissions/">Submissions</a></li>
+                            <li><a class="nav-link {% block admin_messages %} {% endblock %}" href="/messages/">Chat</a></li>
+                            <li><a href="/logout/">Logout</a></li>
+                        {% else %}
+                            <!-- Regular user navigation -->
+                            <li>
+                                <a class="nav-link active" aria-current="page" href="/user_homepage/">Home</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {% block user_notice_list %}{% endblock %}" href="/all_notices/">Notices</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {% block user_applications %}{% endblock %}" href="/user_applications/">Applications</a>
+                            </li>
+                            <li>
+                                <a class="nav-link {% block user_payment_list %}{% endblock %}" href="/user/payments/">Payments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% block user_submissions %}{% endblock %}" href="/user_submissions/">Submissions</a>
+                            </li>
+
+                            <li>
+                                <a class="nav-link" href="/logout/">Logout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" style="font-size: 15px; font-weight: bold; color:#D9232D;"
+                              href="#">Welcome</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+            
+        </div>
+    </header>
+            <!-- End Navbar-->
+        
+        <br><br>
+    {% block body %} {% endblock %}
+ 
+    {% comment %} <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous">
+  </script>
+  {% block js %} {% endblock %}  {% endcomment %}
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"> </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

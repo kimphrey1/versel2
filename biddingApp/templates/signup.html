@@ -1,0 +1,126 @@
+{% extends 'basic.html' %}
+{% comment %} 
+{% block title %} User Signup Page {% endblock %} {% endcomment %}
+{% block user_login %} active {% endblock %}
+{% block css %}
+<style>
+    .custom-container {
+        border: 2px solid black; /* Black border */
+        border-radius: 5px; /* Optional border radius */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+        padding: 20px; /* Add padding to create space between content and border */
+        position: relative; /* Ensure relative positioning for z-index */
+    }
+
+    .custom-container::before,
+    .custom-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        z-index: -1; /* Ensure red border is behind black border */
+    }
+
+    .custom-container::before {
+        border-bottom: none; /* Remove bottom border for top pseudo-element */
+    }
+
+    .custom-container::after {
+        border-top: none; /* Remove top border for bottom pseudo-element */
+    }
+
+
+
+
+
+{% comment %} BUTTON {% endcomment %}
+{% comment %}     btn btn-warning add-button      {% endcomment %}
+
+    /* Add button styling */
+    .add-button-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        background-color: #ff0000; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .add-button:hover {
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }
+</style>
+{% endblock %}
+{% block body %}
+<br><br>
+<form class="container mt-5 custom-container" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="row mt-4">
+        <div class="form-group col-md-6">
+            <label>Company Name</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+        </div>
+        
+        <div class="form-group col-md-6">
+            <label>Email address</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Contact Number</label>
+            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Enter Contact Number">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Company Logo</label>
+            <input type="file" class="form-control" name="image" id="image">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Password</label>
+            <input type="password" class="form-control" name="password1" id="password1" placeholder="Enter Password">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Confirm Password</label>
+            <input type="password" class="form-control" name="password2" id="password2" placeholder="Confirm Password">
+        </div>
+    </div>
+    <br>
+    <input type="submit" value="Submit" class="btn btn-warning add-button">
+</form>
+
+{% if thank %}
+    <script>
+        alert("Account created successfully. You are now logged in.");
+    </script>
+{% endif %}
+J
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+<script>
+    document.getElementById('username').addEventListener('input', function(event) {
+        var inputText = event.target.value;
+        event.target.value = inputText.toUpperCase();
+    });
+</script>
+
+
+
+{% endblock %}

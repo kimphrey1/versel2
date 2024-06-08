@@ -1,0 +1,172 @@
+{% extends 'admin/admin_navbar.html' %}
+
+{% block title %} Add Application {% endblock %}
+{% block all_applicants %} active {% endblock %}
+
+{% block css %}
+    <!-- Include Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        /* Custom styling for Select2 */
+        .select2-container {
+            width: 100%;
+        }
+        
+        .select2-container .select2-selection--single {
+            height: 40px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px 38px 5px 12px;
+            background-color: #fff;
+        }
+
+        .select2-container .select2-selection__rendered {
+            line-height: 28px;
+        }
+
+        .select2-container .select2-selection__arrow {
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+
+        .custom-container {
+            border: 2px solid black; /* Black border */
+            border-radius: 5px; /* Optional border radius */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            margin-top: 20px; /* Margin top for spacing */
+            padding: 20px; /* Add padding to create space between content and border */
+            position: relative; /* Ensure relative positioning for z-index */
+        }
+
+        .custom-container::before,
+        .custom-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border: 2px solid red; /* Red border */
+            border-radius: 5px; /* Optional border radius */
+            z-index: -1; /* Ensure red border is behind black border */
+        }
+
+        .custom-container::before {
+            border-bottom: none; /* Remove bottom border for top pseudo-element */
+        }
+
+        .custom-container::after {
+            border-top: none; /* Remove top border for bottom pseudo-element */
+        }
+
+        .submit-btn {
+            text-align: center;
+        }
+
+
+        /* Add button styling */
+        .add-button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .add-button {
+            background-color: #ff0000; /* Red background */
+            color: #ffffff; /* White text */
+            border: none; /* No border */
+            border-radius: 20px; /* Rounded corners */
+            padding: 10px 20px; /* Padding */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Cursor style */
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+            transition: all 0.3s ease; /* Transition effect */
+        }
+        .add-button:hover {
+            transform: translateY(-3px); /* Move button up */
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Include Select2 JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 for Notice dropdown
+            $('#id_notice').select2({
+                theme: 'bootstrap4', // Optional theme
+                placeholder: '<i class="fas fa-search"></i> Select a Notice', // Placeholder with search icon
+                escapeMarkup: function(markup) {
+                    return markup;
+                }
+            });
+
+            // Initialize Select2 for Applicant dropdown
+            $('#id_applicant').select2({
+                theme: 'bootstrap4', // Optional theme
+                placeholder: '<i class="fas fa-search"></i> Select an Applicant', // Placeholder with search icon
+                escapeMarkup: function(markup) {
+                    return markup;
+                }
+            });
+        });
+    </script>
+
+    <!-- Script for alert -->
+    <script>
+        {% if alert %}
+        alert("Application added successfully.");
+        window.location = "/all_applicants";
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4 form-container custom-container">
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="p-2 text-center mb-4">Add Application</h1>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="id_notice" class="mb-0" style="font-size: 1.2em;"><i class="fas fa-search mr-2"></i>Notice:</label>
+                        <select class="form-control" name="notice" id="id_notice">
+                            {% for notice in notices %}
+                                <option value="{{ notice.pk }}">{{ notice.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="id_applicant" class="mb-0" style="font-size: 1.2em;"><i class="fas fa-search mr-2"></i>Applicant:</label>
+                        <select class="form-control" name="applicant" id="id_applicant">
+                            {% for applicant in applicants %}
+                                <option value="{{ applicant.pk }}">{{ applicant.user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row mt-3">
+                    <div class="form-group col-md-12 mb-3">
+                        <label for="id_letter" class="mb-0" style="font-size: 1.2em;">Letter:</label>
+                        <input type="file" class="form-control-file" name="letter" id="id_letter" required>
+                    </div>
+                </div>
+
+                <div class="submit-btn mt-3">
+                    <button type="submit" class="btn btn-warning add-button">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'user/user_navbar.html' %}
+{% load static %}
+
+{% block title %} Notice Details {% endblock %}
+{% block user_notice_list %} active {% endblock %}
+{% block css %}
+<style>
+    .overview-card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add margin bottom for space */
+    }
+
+    .custom-container {
+        border: 2px solid black; /* Black border */
+        border-radius: 5px; /* Optional border radius */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+        padding: 20px; /* Add padding to create space between content and border */
+        position: relative; /* Ensure relative positioning for z-index */
+    }
+
+    .custom-container::before,
+    .custom-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        z-index: -1; /* Ensure red border is behind black border */
+    }
+
+    .custom-container::before {
+        border-bottom: none; /* Remove bottom border for top pseudo-element */
+    }
+
+    .custom-container::after {
+        border-top: none; /* Remove top border for bottom pseudo-element */
+    }
+
+    .custom-container table {
+        border-collapse: collapse;
+        width: auto; /* Let the table determine its own width based on content */
+        max-width: 100%;
+        table-layout: auto; /* Set table layout to auto */
+    }
+
+
+
+{% comment %} BUTTON {% endcomment %}
+
+    /* Add button styling */
+    .add-button-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        background-color: #ff0000; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .add-button:hover {
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4 shadow-lg py-3 mb-4 custom-container">
+    <div class="container text-center"> <!-- Center align text from here -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="notice-details">
+                    <h3>{{ notice.title }}</h3>
+                    <h4>Reference Number: {{ notice.ref_no }}</h4>
+                    <p><i class="fa fa-calendar"></i> <strong style="color: red;">Closing on: {{ notice.end_date }}</strong></p>
+                    <p>
+                        {% comment %} <a href="{{ notice.full_notice.url }}"> 
+                            <button class="btn btn-warning add-button">View Details</button> 
+                        </a> {% endcomment %}
+
+
+
+                        <a href="{% url 'view_full_notice_images' notice.id %}"> 
+                            <button class="btn btn-warning add-button">View Notice</button> 
+                        </a>
+                        {% comment %} <a href="{{ notice.preview_biddoc.url }}"> 
+                            <button class="btn btn-warning add-button">Download Biddoc</button> 
+                        </a>  {% endcomment %}
+
+
+                        <a href="{% url 'view_biddoc_images' notice.id %}"> 
+                            <button class="btn btn-warning add-button">View Biddoc</button> 
+                        </a>
+                        
+                    </p>
+                    
+
+                    <p><strong>Bid Document Fee (UGX) :</strong> <strong class="Comma">{{ notice.fee }}</strong></p>
+
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4 class="card-title">Overview</h4> <!-- Title outside the box -->
+                <div class="overview-card"> <!-- Add card class to create a box around the content -->
+                    <p>{{ notice.description }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert-container">
+            <div class="col-md-4 alert alert-warning mx-auto" role="alert"> <!-- Center the alert using mx-auto -->
+                The email below will receive the receipt 
+            </div>
+        </div>
+
+        <form class="container mt-3" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row mt-3">
+                <div class="form-group col-md-6">
+                    <label>Email (Editable)</label>
+                    <input type="text" class="form-control" name="email" value="{{ user_email }}" required>
+                </div>
+
+
+                <div class="form-group col-md-6">
+                    <label>Supplier Name</label>
+                    <input type="text" class="form-control" name="company_name" value="{{ user_name }}" readonly required>
+                </div>
+                
+            </div>
+
+            <div class="row mt-3">
+                <div class="form-group col-md-6">
+                    <label>Phone Number (Editable)</label>
+                    <input type="text" class="form-control" name="phone" value="{{ user_mobile }}" required>
+                </div>
+
+
+
+                <div class="form-group col-md-6">
+                    <label>Bidding Document fee (UGX)</label>
+                        <input type="text" class="form-control" name="amount" value="{{ notice.fee|floatformat:0 }}" readonly>
+                </div>
+                
+            </div>
+            
+            <input type="hidden" name="notice_id" value="{{ notice.id }}">
+            <input type="hidden" name="currency" value="UGX">
+
+            <div class="col-md-12 text-center">
+                <button class="btn btn-warning add-button" onclick="return confirm('You will be redirected to the Payment Page first!')" type="submit">Apply</button>
+            </div>
+        </form>
+    </div> <!-- Center align text ends here -->
+</div>
+
+
+
+
+{% comment %} comma sepatator js {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".Comma").each(function() {
+            var amount = parseFloat($(this).text());
+            var newAmount = amount.toLocaleString('en-US');
+            $(this).text(newAmount);
+        });
+    });
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".Comma").each(function() {
+            var amount = parseFloat($(this).val());
+            var newAmount = amount.toLocaleString('en-US');
+            $(this).val(newAmount);
+        });
+    });
+</script>
+
+
+{% endblock %}

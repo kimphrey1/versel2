@@ -1,0 +1,139 @@
+{% extends 'admin/admin_navbar.html' %}
+
+{% block title %} Add Notices {% endblock %}
+{% block notice_list %} active {% endblock %}
+{% block css %}
+<style>
+    .custom-container {
+        border: 2px solid black; /* Black border */
+        border-radius: 5px; /* Optional border radius */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+        padding: 20px; /* Add padding to create space between content and border */
+        position: relative; /* Ensure relative positioning for z-index */
+    }
+
+    .custom-container::before,
+    .custom-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        z-index: -1; /* Ensure red border is behind black border */
+    }
+
+    .custom-container::before {
+        border-bottom: none; /* Remove bottom border for top pseudo-element */
+    }
+
+    .custom-container::after {
+        border-top: none; /* Remove top border for bottom pseudo-element */
+    }
+
+
+
+
+{% comment %} BUTTON {% endcomment %}
+{% comment %}     btn btn-warning add-button      {% endcomment %}
+
+    /* Add button styling */
+    .add-button-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        background-color: #ff0000; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .add-button:hover {
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }
+</style>
+{% endblock %}
+{% block body %}
+<form class="container mt-3 custom-container" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="form-group col-md-12">
+            <label>Title</label>
+            <input type="text" class="form-control" name="notice_title" id="notice_title" placeholder="Notice Title" required>
+        </div>
+    </div>
+    
+    
+    <div class="row mt-3">
+        <div class="form-group col-md-6">
+            <label>Reference Number</label>
+            <input type="text" class="form-control" name="ref_no" id="ref_no" placeholder="Procurement Ref Number" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Bid Document Fee</label>
+            <input type="tel" class="form-control" name="fee" id="fee" placeholder="Enter Bid Document Fee" required>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="form-group col-md-6">
+            <label>Start Date</label>
+            <input type="datetime-local" class="form-control" name="start_date" id="start_date" placeholder="Start Date" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>End Date</label>
+            <input type="datetime-local" class="form-control" name="end_date" id="end_date" placeholder="End Date" required>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="form-group col-md-12">
+            <label>Short Description</label>
+            <textarea name="description" id="description" class="form-control" cols="30" rows="4" placeholder="Description of this invitation" required></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+            <div class="form-group col-md-6">
+                <label>Upload Advert</label>
+                <input type="file" class="form-control-file" name="full_notice" id="full_notice" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Bidding Documents</label>
+                <input type="file" class="form-control-file" name="bidding_doc" id="bidding_doc" required>
+            </div>
+    </div>
+
+    <div class="row mt-3 justify-content-center"> <!-- Center the button -->
+        <div class="form-group col-md-6 text-center"> <!-- Center the button -->
+            <input type="submit" value="Submit" class="btn btn-warning add-button">
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block js %}
+<script>
+    {% if alert %}
+    alert("Notice added successfully.")
+    window.location = "/notice_list"
+    {% endif %}
+
+
+
+    document.getElementById('notice_title').addEventListener('input', function(event) {
+        var inputText = event.target.value;
+        event.target.value = inputText.toUpperCase();
+    });
+</script>
+{% endblock %}

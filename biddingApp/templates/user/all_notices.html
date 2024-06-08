@@ -1,0 +1,217 @@
+{% extends 'user/user_navbar.html' %}
+
+{% block title %} Notice Lists {% endblock %}
+{% block user_notice_list %} active {% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<style>
+    /* Add your CSS styles here */
+    .dark-heading th {
+        background-color: #343a40; /* Dark gray background */
+        color: #ffffff; /* White text */
+        border: 1px solid black; /* Thin black border */
+    }
+
+    .custom-table-container {
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        box-shadow: 0 0 0 2px #343a40; /* Dark line surrounding the table */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+    }
+
+    .custom-table-container table {
+        border: 2px solid black; /* Black outside border for the table */
+        border-collapse: collapse;
+        width: 100%; /* Make the table fill the available width */
+        max-width: none; /* Disable maximum width */
+    }
+    
+
+    .custom-table-container table tbody tr:hover {
+        background-color: #ffff99; /* Yellow hover background color */
+    }
+
+    .custom-table-container table th,
+    .custom-table-container table td {
+        border-right: 1px solid black; /* Thin black line through the columns */
+        border-bottom: 1px solid black; /* Thin black line for horizontal lines */
+        padding: 8px; /* Padding for table cells */
+    }
+
+    /* Centering the content in "Apply" column */
+    .custom-table-container table td.apply-column {
+        text-align: center;
+    }
+
+    /* Add button styling */
+    .apply-button {
+        background-color: grey; /* Red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        border-radius: 20px; /* Rounded corners */
+        padding: 10px 20px; /* Padding */
+        font-size: 16px; /* Font size */
+        cursor: pointer; /* Cursor style */
+        {% comment %} box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */ {% endcomment %}
+        box-shadow: 0 5px 15px rgba(149, 110, 110, 0.4); /* Box shadow */
+        transition: all 0.3s ease; /* Transition effect */
+    }
+    .apply-button:hover {
+        background-color: #FF0000; /* Red background */
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }
+
+
+{% comment %} added  {% endcomment %}
+
+
+/* Add button styling */
+.apply2-button {
+    background-color: grey; /* Red background */
+    color: #ffffff; /* White text */
+    border: none; /* No border */
+    border-radius: 20px; /* Rounded corners */
+    padding: 10px 20px; /* Padding */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Cursor style */
+    {% comment %} box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); /* Box shadow */ {% endcomment %}
+    box-shadow: 0 5px 15px rgba(149, 110, 110, 0.4); /* Box shadow */
+    transition: all 0.3s ease; /* Transition effect */
+}
+
+
+    .apply2-button:hover {
+        {% comment %} background-color: #FF0000; /* Red background */ {% endcomment %}
+        transform: translateY(-3px); /* Move button up */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* Black box shadow on hover */
+
+    }
+
+
+    <style>
+        /* CSS for button styling */
+        .apply-button {
+          font-size: 24px;
+        }
+      </style>
+
+
+      <style>
+        .align-right {
+            text-align: right;
+        }
+    </style>
+    
+      
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container custom-table-container">
+    <div>
+        &nbsp;
+    </div>
+    <table class="table table-striped table-bordered" id="example">
+        <thead class="dark-heading">
+            <tr>
+                <th>No</th>
+                <th>Title</th>
+                <th>Fee(UGX)</th>
+                <th>Closes</th>
+                <th>Apply</th>
+                <th>Submit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notice in notices %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ notice.title }}</td>
+
+                <td class="Comma align-right">{{ notice.fee }}</td>
+                <td class="align-right">{{ notice.end_date }}</td>
+                {% if notice.id in application_data %}
+                <td class="apply-column">&nbsp;</td>
+                {% else %}
+                    <td class="apply-column" style="text-align: center;">
+                        <a href="/notice_detail/{{ notice.id }}/" class="apply-button" style="display: inline-block; color: #ffffff; border: none; border-radius: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; text-decoration: none; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);">
+                            Apply
+                        </a>
+                    </td>
+                {% endif %}
+                {% if notice.id in application_data %}
+                    {% if notice.id in submission_data %}
+                    <td class="apply-column">&nbsp;</td>
+
+                    {% else %}
+                        <td class="apply-column" style="text-align: center;">
+                            <a href="/notice_submit/{{ notice.id }}/" class="apply-button" style="display: inline-block; color: #ffffff; border: none; border-radius: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; text-decoration: none; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);">
+                                Submit
+                            </a>
+                        </td>
+                    {% endif %}
+                {% else %}
+                    <td class="apply-column" style="text-align: center;">
+                        <button class="apply2-button" style="display: inline-block; color: #ffffff; border: none; border-radius: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; text-decoration: none; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);">
+                            Submit
+                        </button>
+                    </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // JavaScript to show alert message when "No Application" button is clicked
+    document.querySelectorAll('.apply2-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            alert('You need to submit an application first.');
+        });
+    });
+</script>
+
+{% endblock %}
+
+
+
+
+
+{% block js %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $(".Comma").each(function() {
+            var amount = parseFloat($(this).text());
+            var newAmount = amount.toLocaleString('en-US');
+            $(this).text(newAmount);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+                'pdf'
+            ],
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+    });
+</script>
+
+
+
+
+{% endblock %}

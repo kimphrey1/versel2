@@ -1,0 +1,40 @@
+
+<!-- Adverts Start -->
+
+<section id="services" class="services">
+    <div class="container" data-aos="fade-up">
+        <center> <div id="title" class="col-lg-6 ">
+            <h2 class="section-title position-relative mb-5"  style="text-decoration: #f3102e underline;"> Invitations to Bid</h2>
+          </div></center>
+        {% if notices %}
+            <div class="row">
+                {% for notice in notices %}
+                    <div class="col-md-6 mt-4 mt-md-0">
+                        <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+                            <i class="bi bi-briefcase"></i>
+                            <h4><a>{{ notice.ref_no }}</a></h4>
+                            <p>{{ notice.title }}</p>
+                            {% if request.user.is_superuser  %}
+                            <a href="" onclick="isAdmin()">
+                                <button class="btn btn-secondary btn-block">Apply</button>
+                            </a>
+                            {% else %}
+                                <a href="admin_login/">
+                                    <button class="btn btn-secondary btn-block">Apply</button>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h3 style="text-align:center; color:#3E454C;">No Invitations Available</h3>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    function isAdmin() {
+        alert("Administrators cannot apply!");
+    }
+</script>

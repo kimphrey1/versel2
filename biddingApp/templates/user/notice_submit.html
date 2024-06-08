@@ -1,0 +1,88 @@
+{% extends 'user/user_navbar.html' %}
+
+{% block title %} Submission {% endblock %}
+{% block user_submissions %} active {% endblock %}
+{% block css %}
+<style>
+    .custom-container {
+        border: 2px solid black; /* Black border */
+        border-radius: 5px; /* Optional border radius */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        margin-top: 20px; /* Margin top for spacing */
+        padding: 20px; /* Add padding to create space between content and border */
+        position: relative; /* Ensure relative positioning for z-index */
+    }
+
+    .custom-container::before,
+    .custom-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 2px solid red; /* Red border */
+        border-radius: 5px; /* Optional border radius */
+        z-index: -1; /* Ensure red border is behind black border */
+    }
+
+    .custom-container::before {
+        border-bottom: none; /* Remove bottom border for top pseudo-element */
+    }
+
+    .custom-container::after {
+        border-top: none; /* Remove top border for bottom pseudo-element */
+    }
+
+    .btn-danger:hover {
+        transform: translateY(3px); /* Move button down */
+        {% comment %} background-color: #ffff00 !important; /* Yellow background on hover */ {% endcomment %}
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6); /* Enhanced box shadow on hover */
+    }   
+</style>
+{% endblock %}
+{% block body %}
+<div class="container mt-4 shadow-lg py-3 mb-4 custom-container">
+    <form method="POST" enctype="multipart/form-data"> 
+        {% csrf_token %}
+        {% if error_message %}
+        <div class="col-md-6 alert alert-danger mx-auto" role="alert">
+            {{ error_message }}
+        </div>
+        {% endif %}
+        <div class="col-md-6 alert alert-warning mx-auto d-flex justify-content-center" role="alert">
+          Make Sure Your File Has a Password
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-row col-md-6">
+                <label>Upload Bid (Zipped Files Only)</label>
+                <input type="file" class="form-control" name="userbid" id="userbid" accept=".zip,.rar" required>
+            </div>
+            <div class="form-row col-md-6 ml-1">
+                <label>Number of files Attached</label>
+                <input type="text" class="form-control" name="files_attached" id="files_attached" placeholder="How many files are in the zip?" required>
+            </div>
+        </div>
+        <br>
+        <div class="text-center"> <!-- Center align the submit button -->
+            <input type="submit" value="Submit" class="btn btn-danger mt-3" style="background-color: #ff0000; border-color: #ff0000; transition: all 0.3s ease;">
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    {% if alert %}
+    alert("Submission Successful");
+    document.location = "/all_notices/"
+    {% endif %}
+    {% if closed %}
+    alert("Date for submitting has been closed")
+    document.location = "/all_notices/"
+    {% endif %}
+    {% if notopen %}
+    alert("Date for submitting has not yet started")
+    document.location = "/all_notices/"
+    {% endif %}
+</script>
+{% endblock %}
